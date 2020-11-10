@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Работодатели с IT-вакансиями без опыта работы | Hello Junior{% endblock %}
+{% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Главная</a></li>
+                                <li>Работодатели</li>
+                            </ul>
+                            <h1>Рабтодатели</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section Start -->
+{% endblock %}
+
+{% block content %}
+        <!-- Employers Listing Section Start -->
+        <div class="employers-listing-section section bg_color--5 pb-120 pb-lg-100 pb-md-75 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row no-gutters">
+
+                    <div class="col-lg-4 order-lg-1 order-2 pr-55 pr-md-15 pr-sm-15 pr-xs-15">
+                        <form action="">
+                        <div class="sidebar-wrapper-two mt-sm-40 mt-xs-40">
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Поиск</h2>
+                                <div class="sidebar-search-form-two">
+                                        <div class="input-group">
+                                            {{ form.search }}
+                                            <i class="lnr lnr-magnifier"></i>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Есть вакансии в городе:</h2>
+                                <div class="single-field-item">
+                                {{ form.city }}
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <div class="filter-name-item">
+                                        <div class="input-group">
+                                            <label for={{ form.remote.id_for_label }}>{{ form.remote }} Есть удалённая работа</label>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Необходимый стек:</h2>
+                                <ul class="sidebar-tag">
+                                    {% for skill in form.skills %}
+                                    <li><a>{{ skill }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                            <button type="submit" class="ht-btn theme-btn theme-btn-two w-100">Найти</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+
+                    <div class="col-lg-8 order-lg-2 order-1">
+                        <div class="filter-form">
+                            <div class="result-sorting">
+                                <div class="total-result">
+                                    Найдено компаний:
+                                    <span class="total">{{ object_list.paginator.count }}</span>
+                                </div>
+                                <div class="form-left">
+
+                                    <div class="layout-switcher">
+                                        <ul class="nav">
+                                            <li><a class="active show" data-toggle="tab" href="#list"><i class="fa fa-list"></i></a></li>
+                                            <li><a data-toggle="tab" href="#grid"><i class="fa fa-th"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="list" class="tab-pane fade show active">
+                                <div class="row">
+                                {% for object in object_list %}
+                                    <div class="col-lg-12 mb-20">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-employer-list style-two">
+                                            <div class="info-top align-items-start">
+                                                <div class="employer-image">
+                                                    <a href="employer-details.html">
+                                                        {% if object.logo %}
+                                                        <img src="{{ object.logo }}" alt="{{ object.name }}">
+                                                        {% else %}
+                                                        <img src="{% static 'assets/images/companies_logo/no-logo.jpg' %}" alt="Нет логотипа">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="employer-info">
+                                                    <div class="employer-info-inner">
+                                                        <div class="employer-info-top">
+                                                            <div class="title-name">
+                                                                <h3 class="employer-title">
+                                                                    <a href="{% url 'employer_detail' pk=object.id %}">{{ object.name }}</a>
+                                                                </h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="field-description">
+                                                            {% if object.description %}
+                                                            <p>{{ object.description|striptags|safe|slice:":140" }}...</p>
+                                                            {% else %}
+                                                            <p>Компания пока не указала описание.</p>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="employer-bottom">
+                                                            <div class="openjobs">
+                                                                <a href="{% url 'employer_detail' pk=object.id %}">Вакансий: {{ object.vacancies.count }} </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                {% empty %}
+                                    <div class="col-lg-12 mb-20">
+                                    <p>По вашим параметрам ничего не найдено</p>
+                                    </div>
+                                    {% endfor %}
+
+
+                                </div>
+                                {% if object_list.has_other_pages %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <ul class="page-pagination">
+                                            {% if object_list.has_previous %}
+                                            <li><a href="?page={{ object_list.previous_page_number }}{{ paginate_link }}">
+                                            <i class="fa fa-angle-left"></i></a></li>
+                                            {% if object_list.number > 3 %}
+                                            <li><a href="?page=1{{ paginate_link }}{{ paginate_link }}">1</a>
+                                            </li>
+                                            {% if object_list.number > 4 %}
+                                            <li>...</li>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% endif %}
+
+                                            {% for num in object_list.paginator.page_range %}
+                                            {% if object_list.number == num %}
+                                            <li class="active"><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a></li>
+                                            {% elif num > object_list.number|add:'-3' and num < object_list.number|add:'3' %}
+                                            <li><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                            {% if object_list.has_next %}
+                                            {% if object_list.number < object_list.paginator.num_pages|add:'-3' %}
+                                            <li>...</li>
+                                            <li><a href="?page={{ object_list.paginator.num_pages }}{{ paginate_link }}">{{ object_list.paginator.num_pages }}</a>
+                                            </li>
+                                            {% elif object_list.number < object_list.paginator.num_pages|add:'-2' %}
+                                            <li><a href="?page={{ object_list.paginator.num_pages }}{{ paginate_link }}">{{ object_list.paginator.num_pages }}</a>
+                                            </li>
+                                            {% endif %}
+                                            <li><a href="?page={{ object_list.next_page_number }}{{ paginate_link }}"><i class="fa fa-angle-right"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div id="grid" class="tab-pane fade">
+                                <div class="row">
+                                {% for object in object_list %}
+                                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 mb-30">
+                                        <!-- Single Employer Item Start -->
+                                        <div class="employer-item border">
+                                            <div class="saveJob for-grid">
+                                                {% if object.remote %}
+                                                <span class="featured-label mr-20">Удалённо</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="employer-image">
+                                                {% if object.logo%}
+                                                <img src="{{ object.logo }}" alt="{{ object.name }}">
+                                                {% else %}
+                                                <img src="{% static 'assets/images/companies_logo/no-logo.jpg' %}" alt="Нет логотипа">
+                                                {% endif %}
+                                            </div>
+                                            <div class="employer-info-top">
+                                                <h3 class="employer-name"><a href="{% url 'employer_detail' pk=object.id %}">{{ object.name }}</a></h3>
+                                                <a href="{% url 'employer_detail' pk=object.id %}" class="link-openjobs">Вакансий: {{ object.vacancies.count }}</a>
+                                            </div>
+                                        </div>
+                                        <!-- Single Employer Item End -->
+                                    </div>
+                                {% empty %}
+                                    <div class="col-lg-12 mb-20">
+                                        <p>По вашим параметрам ничего не найдено</p>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                                {% if object_list.has_other_pages %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <ul class="page-pagination">
+                                            {% if object_list.has_previous %}
+                                            <li><a href="?page={{ object_list.previous_page_number }}{{ paginate_link }}">
+                                            <i class="fa fa-angle-left"></i></a></li>
+                                            {% if object_list.number > 3 %}
+                                            <li><a href="?page=1{{ paginate_link }}{{ paginate_link }}">1</a>
+                                            </li>
+                                            {% if object_list.number > 4 %}
+                                            <li>...</li>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% endif %}
+
+                                            {% for num in object_list.paginator.page_range %}
+                                            {% if object_list.number == num %}
+                                            <li class="active"><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a></li>
+                                            {% elif num > object_list.number|add:'-3' and num < object_list.number|add:'3' %}
+                                            <li><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                            {% if object_list.has_next %}
+                                            {% if object_list.number < object_list.paginator.num_pages|add:'-3' %}
+                                            <li>...</li>
+                                            <li><a href="?page={{ object_list.paginator.num_pages }}{{ paginate_link }}">{{ object_list.paginator.num_pages }}</a>
+                                            </li>
+                                            {% elif object_list.number < object_list.paginator.num_pages|add:'-2' %}
+                                            <li><a href="?page={{ object_list.paginator.num_pages }}{{ paginate_link }}">{{ object_list.paginator.num_pages }}</a>
+                                            </li>
+                                            {% endif %}
+                                            <li><a href="?page={{ object_list.next_page_number }}{{ paginate_link }}"><i class="fa fa-angle-right"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Employers Listing Section End -->
+{% endblock %}

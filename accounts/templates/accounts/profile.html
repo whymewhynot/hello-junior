@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Мой профиль | Hello Junior{% endblock %}
+
+        {% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Главная</a></li>
+                                <li>Мой профиль</li>
+                            </ul>
+                            <h1>Мой профиль</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section End -->
+        {% endblock %}
+
+{% block content %}
+        <!-- Blog Section Start -->
+        <div class="blog-section section pt-120 pt-lg-100 pt-md-80 pt-sm-60 pt-xs-50 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-xl-8 col-lg-10 ml-auto mr-auto">
+                        <div class="row">
+
+                            <div class="col-12">
+                                <!-- Single Blog Start -->
+                                <div class="single-blog-post mb-90 mb-xs-50">
+
+                                    <div class="blog-content text-center">
+                                        <ul class="post-meta">
+                                            <li><i class="lnr lnr-user"></i>{{ user }}</li>
+                                            <li><i class="lnr lnr-clock"></i>{{ user.registered}}</li>
+                                            <li><i class="lnr lnr-warning"></i><a href="{% url 'password_change' %}">Изменить пароль</a></li>
+                                        </ul>
+                                        <div class="col-12">
+                                <div class="comment-wrapper mt-90">
+                                    <div class="comment-form">
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <div class="row row-7">
+                                                <div class="col-md-3 mb-15 text-left">
+                                                    <p>Город:</p>
+                                                </div>
+                                                <div class="col-md-4 mb-15 single-field-item">
+                                                    {{ form.city}}
+                                                </div>
+                                            </div>
+                                            <div class="row row-7">
+                                                <div class="col-md-3 mb-15 text-left">
+                                                    <p>Удалённая работа:</p>
+                                                </div>
+                                                <div class="col-md-1 mb-15 ">
+                                                    {{ form.remote }}
+                                                </div>
+                                            </div>
+                                            <div class="row row-7">
+                                                <div class="col-md-3 mb-15 text-left">
+                                                    <p>Подписка на рассылку:</p>
+                                                </div>
+                                                <div class="col-md-1 mb-15 ">
+                                                    {{ form.is_subscribed }}
+                                                </div>
+                                            </div>
+                                            <div class="row row-7">
+                                                <div class="col post-tags text-left">
+                                                <ul class="tags">
+                                                <p>Специализация:</p>
+                                                {% for skill in form.skills %}
+                                                <li><a>{{ skill }}</a></li>
+                                                {% endfor %}
+                                                </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center mt-20">
+                                                    <button class="ht-btn theme-btn theme-btn-two">Сохранить</button>
+                                                </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <!-- Single Blog End -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Blog Section End -->
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Вакансия {{ job.title }} в компании {{ job.company.name }}, г. {{ job.city.name }} | Hello Junior{% endblock %}
+{% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Главная</a></li>
+                                <li><a href="{% url 'jobs' %}">Вакансии</a></li>
+                                <li>{{ job.title }}</li>
+                            </ul>
+                            <h1>{{ job.title }}</h1>
+                        </div>
+                        <div class="job-meta-detail">
+                            <ul>
+                                <li class="posted">
+                                    <i class="lnr lnr-eye"></i>
+                                    <span class="text">{{ job.page_views }} </span>
+                                </li>
+                                <li class="posted">
+                                    <i class="lnr lnr-clock"></i>
+                                    <span class="text">Опубликовано: </span>
+                                    <span class="time">{{ job.published|naturaltime }}</span>
+                                </li>
+                                <li class="expries">
+                                    <i class="lnr lnr-hourglass"></i>
+                                    <span class="text">Статус вакансии: </span>
+                                    {% if not job.archived %}
+                                    <span class="date theme-color"> активная </span>
+                                    {% else %}
+                                    <span class="date"> в архиве </span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section Start -->
+{% endblock %}
+
+{% block content %}
+        <!-- Job Meta Detail Box Section Start -->
+        <div class="job-meta-detail-box section bg_color--5 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row no-gutters">
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-map-marker"></i>
+                                <span>Город: </span>
+                            </div>
+                            <div class="field-value">{{ job.city }}</div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-thumbs-up"></i>
+                                <span>Зарплата </span>
+                            </div>
+                            <div class="field-value salary">
+                            {{ job.display_salary }}
+                            </div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-briefcase"></i>
+                                <span>Тип занятости </span>
+                            </div>
+                            <div class="field-value"><a class="fw-600" href="job-details.html#">{{ job.get_type_of_employment_display }}</a></div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-flag"></i>
+                                <span>Удалённо </span>
+                            </div>
+                            <div class="field-value">{% if job.remote %}да{% else %}нет{% endif %}</div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-graduation-hat"></i>
+                                <span>Опыт работы </span>
+                            </div>
+                            <div class="field-value">{{ job.experience }}</div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <!-- Single Meta Field Start -->
+                        <div class="single-meta-field">
+                            <div class="field-label">
+                                <i class="lnr lnr-layers"></i>
+                                <span>Стек </span>
+                            </div>
+                            <div class="field-value">
+                                <div class="job-skill-tag">
+                                    {% for skill in job.skills.all %}
+                                    <a href="{% url 'jobs' %}?skills={{ skill.id }}">{{ skill.name }}</a>
+                                    {% empty %}
+                                    не указан
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Meta Field Start -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Job Meta Detail Box Section End -->
+
+        <!-- Job Details Section Start -->
+        <div class="job-details-section section pt-120 pt-lg-100 pt-md-80 pt-sm-50 pt-xs-40 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-4 order-lg-2 order-2 mt-sm-60 mt-xs-50">
+                        <div class="sidebar-wrapper-three">
+                            <div class="common-sidebar-widget sidebar-three">
+                                <div class="sidebar-job-apply">
+                                    <div class="action-button">
+                                        <a class="ht-btn text-center" target="_blank" {% if user.is_authenticated %}href="https://hh.ru/vacancy/{{ job.hh_id }}"
+                                                                                    {% else %}href="#quick-view-modal-container" data-toggle="modal"{% endif %}>
+                                            Отправить отклик <i class="ml-10 mr-0 fa fa-paper-plane"></i></a>
+                                        <span>или</span>
+                                        <div class="line"></div>
+                                        {% if user.is_authenticated %}
+                                        <form action="{% url 'add_remove' id=job.id %}" method="post">{% csrf_token %}
+                                        {% if job in user.favorites.all %}
+                                        <button class="ht-btn facebook-btn text-center" style="background:red"> Удалить из избранного <i class="ml-10 mr-0 fas fa-heart"></i></button>
+                                        {% else %}
+                                        <button class="ht-btn facebook-btn text-center"> Сохранить <i class="ml-10 mr-0 far fa-heart"></i></button>
+                                        {% endif %}
+                                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                                        </form>
+                                        {% else %}
+                                        <a class="ht-btn facebook-btn text-center" href="#quick-view-modal-container" data-toggle="modal"> Сохранить <i class="ml-10 mr-0 far fa-heart"></i></a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-three">
+                                <div class="sidebar-job-employer">
+                                    <div class="job-employer-widget">
+                                        <div class="image">
+                                            {% if job.company.logo %}
+                                            <img src="{{ job.company.logo }}" alt="{{ job.company.name }}">
+                                            {% else %}
+                                            <img src="{% static 'assets/images/companies_logo/no-logo.jpg' %}" alt="Нет логотипа">
+                                            {% endif %}
+                                        </div>
+                                        <div class="content-box">
+                                            <p class="location">
+                                                <i class="lnr lnr-users"></i>
+                                                Работодатель
+                                            </p>
+                                            <h4 class="title">
+                                                <a href="{% url 'employer_detail' pk=object.company.id %}">{{ job.company }}</a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if object.company.vacancies.all|length > 1 %}
+                            <div class="common-sidebar-widget sidebar-three">
+                                <h2 class="sidebar-title">Другие вакансии работодателя</h2>
+                                <div class="sidebar-job">
+                                    <div class="row">
+                                {% for job in object.company.vacancies.all|slice:':5'  %}
+                                        <div class="col-lg-12">
+                                            {% if job.id != object.id %}
+                                            <!-- Single Job Start  -->
+                                            <div class="single-job style-two">
+                                                <div class="info-top">
+                                                    <div class="job-info">
+                                                        <div class="job-info-inner">
+                                                            <div class="job-info-top">
+                                                                <div class="title-name">
+                                                                    <h5 class="job-title">
+                                                                        <a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a>
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <div class="job-meta-two flex-wrap">
+                                                                <div class="field-salary_from">
+                                                                    <i class="gj-icon gj-icon-money"></i>
+                                                                    {{ job.display_salary }}
+                                                                </div>
+                                                                <div class="field-datetime"><i class="lnr lnr-clock"></i>{{ job.published|naturaltime }}</div>
+                                                                <div class="field-map"><i class="lnr lnr-map-marker"></i>{{ job.city }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Single Job End -->
+                                            {% endif %}
+                                        </div>
+                                {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 order-lg-1 order-1 pr-55 pr-md-15 pr-sm-15 pr-xs-15">
+
+                        <div class="job-detail-content">
+                            <div class="field-descriptions mb-60 mb-sm-30 mb-xs-30">
+                                {{ job.description| safe }}
+                            </div>
+
+                            <div class="job-apply">
+                                <a class="ht-btn text-center" target="_blank" {% if user.is_authenticated %}href="https://hh.ru/vacancy/{{ job.hh_id }}"
+                                                                              {% else %}href="#quick-view-modal-container" data-toggle="modal"{% endif %}>
+                                    Отправить отклик <i class="ml-10 mr-0 fa fa-paper-plane"></i></a>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Job Details Section End -->
+
+{% endblock %}

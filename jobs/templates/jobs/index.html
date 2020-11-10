@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block content %}
+        <!--slider section start-->
+        <div class="hero-section section position-relative">
+            <!--Hero Item start-->
+            <div class="hero-item bg_image--1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <!--Hero Content start-->
+                            <div class="hero-content-2 left">
+                                <h2 class="title">Hello Junior</h2>
+                                <p>IT-вакансии для начинающих специалистов без опыта работы</p>
+
+                                <div class="job-search-wrap mt-90 mt-md-70 mt-sm-50 mt-xs-30">
+                                    <div class="job-search-form">
+                                        <form action="{% url 'jobs' %}">
+                                            <div class="row row-5">
+                                                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                                                    <!-- Single Field Item Start  -->
+                                                    <div class="single-field-item">
+                                                        <i class="lnr lnr-magnifier"></i>
+                                                        {{ job_form.title }}
+                                                    </div>
+                                                    <!-- Single Field Item End  -->
+                                                </div>
+                                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                                    <!-- Single Field Item Start  -->
+                                                    <div class="single-field-item">
+                                                    {{ job_form.city }}
+                                                    </div>
+                                                    <!-- Single Field Item End  -->
+                                                </div>
+                                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                                    <!-- Single Field Item Start  -->
+                                                    <div class="single-field-item">
+                                                        {{ job_form.salary_from }}
+                                                    </div>
+                                                    <!-- Single Field Item End  -->
+                                                </div>
+                                                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
+                                                    <div class="submit-btn">
+                                                        <button class="ht-btn" type="submit"> Найти</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--Hero Content end-->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Hero Item end-->
+        </div>
+        <!--slider section end-->
+
+
+
+        <!-- Featured Employer Start -->
+        <div class="featured-employer section pt-115 pt-lg-95 pt-md-75 pt-sm-55 pt-xs-45">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-wrap mb-45">
+                            <div class="section-title">
+<!--                                <span>JOB FROM EMPLOYERS</span>-->
+                                <h3 class="title">Работа в компаниях</h3>
+                            </div>
+                            <div class="jetapo-link">
+                                <a href="{% url 'employers' %}">Все работодатели<i class="lnr lnr-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-five-column no-gutters border-top-left">
+                {% for company in employers|slice:'5' %}
+                    <div class="col-xl-2 col-lg-3 col-md-6 col-sm-6">
+                        <!-- Single Employer Item Start -->
+                        <div class="employer-item item-border-bottom">
+                            <div class="employer-image">
+                                <img src="{{ company.logo }}" alt="{{ company.name }}">
+                            </div>
+                            <div class="employer-info-top">
+                                <span class="employer-location"><i class="lnr lnr-users"></i> Вакансий: {{ company.vacancies.count }}</span>
+                                <h3 class="employer-name"><a href="{% url 'employer_detail' pk=company.id %}">{{ company.name }}</a></h3>
+                            </div>
+                        </div>
+                        <!-- Single Employer Item End -->
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Featured Employer End -->
+
+        <!-- Job Section Start -->
+        <div class="job-section section bg-image-proparty bg_image--2 pt-115 pt-lg-95 pt-md-75 pt-sm-55 pt-xs-45 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="section-title-wrap mb-45">
+                            <div class="section-title">
+                                <h3 class="title">Новые вакансии</h3>
+                            </div>
+                            <div class="jetapo-tab-menu">
+                                <ul class="nav">
+                                    <li><a class="active show" data-toggle="tab" href="#fullTime"> Полный день </a></li>
+                                    <li><a data-toggle="tab" href="#remote"> Удалённо </a></li>
+                                    <li><a data-toggle="tab" href="#internship"> Стажировка </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tab-content">
+                            <div id="fullTime" class="tab-pane fade show active">
+                                <div class="row">
+                                {% for f_job in full_time_jobs %}
+                                    <div class="col-lg-6 mb-30">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-job">
+                                            <div class="info-top">
+                                                <div class="job-image">
+                                                    {% if f_job.company.logo %}
+                                                    <a href="{% url 'job_detail' pk=f_job.id %}">
+                                                        <img src="{{ f_job.company.logo }}" alt="{{ f_job.company.name }}">
+                                                    </a>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="job-info">
+                                                    <div class="job-info-inner">
+                                                        <div class="job-info-top">
+                                                            <div class="saveJob for-listing">
+                                                                {% if user.is_authenticated %}
+                                                                <form action="{% url 'add_remove' id=f_job.id %}" method="post">{% csrf_token %}
+                                                                <button class="save-job ml-20" type="submit">
+                                                                    {% if f_job in user.favorites.all %}
+                                                                    <i class="fas fa-heart" style="color:red"></i>
+                                                                    {% else %}
+                                                                    <i class="far fa-heart"></i>
+                                                                    {% endif %}
+                                                                    <input type="hidden" name="url_from" value="{{ request.get_full_path }}">
+                                                                </button>
+                                                                </form>
+                                                                {% else %}
+                                                                    <a class="save-job" href="#quick-view-modal-container" data-toggle="modal">
+                                                                    <i class="far fa-heart"></i>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="title-name">
+                                                                <h3 class="job-title">
+                                                                    <a href="{% url 'job_detail' pk=f_job.id %}">{{ f_job.title }}</a>
+                                                                </h3>
+                                                                <div class="employer-name">
+                                                                    <a href="{% url 'employer_detail' pk=f_job.company.id %}">{{ f_job.company }}</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="job-salary">{{ f_job.display_salary }}</span>
+                                                        <div class="job-meta">
+                                                            <div class="job-location"><i class="lnr lnr-map-marker"></i><a href="{% url 'jobs' %}?city={{ f_job.city.id }}">{{ f_job.city }}</a></div>
+
+                                                            <div class="job-type"><i class="lnr lnr-briefcase"></i><a class="def-color" href="{% url 'jobs' %}?type_of_employment={{ f_job.type_of_employment }}">{{ f_job.get_type_of_employment_display }}</a></div>
+
+                                                            <div class="job-date"><i class="lnr lnr-clock"></i>{{ f_job.published|naturaltime }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            <div id="remote" class="tab-pane fade">
+                                <div class="row">
+                                {% for r_job in remote_jobs %}
+                                    <div class="col-lg-6 mb-30">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-job">
+                                            <div class="info-top">
+                                                <div class="job-image">
+                                                    {% if r_job.company.logo %}
+                                                    <a href="{% url 'job_detail' pk=r_job.id %}">
+                                                        <img src="{{ r_job.company.logo }}" alt="{{ r_job.company.name }}">
+                                                    </a>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="job-info">
+                                                    <div class="job-info-inner">
+                                                        <div class="job-info-top">
+                                                            <div class="saveJob for-listing">
+                                                                <span class="featured-label ml-20 mr-20">Удалённо</span>
+                                                                {% if user.is_authenticated %}
+                                                                <form action="{% url 'add_remove' id=r_job.id %}" method="post">{% csrf_token %}
+                                                                <button class="save-job ml-20" type="submit">
+                                                                    {% if r_job in user.favorites.all %}
+                                                                    <i class="fas fa-heart" style="color:red"></i>
+                                                                    {% else %}
+                                                                    <i class="far fa-heart"></i>
+                                                                    {% endif %}
+                                                                    <input type="hidden" name="url_from" value="{{ request.get_full_path }}">
+                                                                </button>
+                                                                </form>
+                                                                {% else %}
+                                                                    <a class="save-job" href="#quick-view-modal-container" data-toggle="modal">
+                                                                    <i class="far fa-heart"></i>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="title-name">
+                                                                <h3 class="job-title">
+                                                                    <a href="{% url 'job_detail' pk=r_job.id %}">{{ r_job.title }}</a>
+                                                                </h3>
+                                                                <div class="employer-name">
+                                                                    <a href="{% url 'employer_detail' pk=r_job.company.id %}">{{ r_job.company }}</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="job-salary">{{ r_job.display_salary }}</span>
+                                                        <div class="job-meta">
+                                                            <div class="job-location"><i class="lnr lnr-map-marker"></i><a href="{% url 'jobs' %}?city={{ r_job.city.id }}">{{ r_job.city }}</a></div>
+
+                                                            <div class="job-type"><i class="lnr lnr-briefcase"></i><a class="def-color" href="{% url 'jobs' %}?type_of_employment={{ r_job.type_of_employment }}">{{ r_job.get_type_of_employment_display }}</a></div>
+
+                                                            <div class="job-date"><i class="lnr lnr-clock"></i>{{ r_job.published|naturaltime }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+
+                            <div id="internship" class="tab-pane fade">
+                                <div class="row">
+                                {% for i_job in intern_jobs %}
+                                    <div class="col-lg-6 mb-30">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-job">
+                                            <div class="info-top">
+                                                <div class="job-image">
+                                                    {% if i_job.company.logo %}
+                                                    <a href="{% url 'job_detail' pk=i_job.id %}">
+                                                        <img src="{{ i_job.company.logo }}" alt="{{ i_job.company.name }}">
+                                                    </a>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="job-info">
+                                                    <div class="job-info-inner">
+                                                        <div class="job-info-top">
+                                                            <div class="saveJob for-listing">
+                                                                {% if user.is_authenticated %}
+                                                                <form action="{% url 'add_remove' id=i_job.id %}" method="post">{% csrf_token %}
+                                                                <button class="save-job ml-20" type="submit">
+                                                                    {% if i_job in user.favorites.all %}
+                                                                    <i class="fas fa-heart" style="color:red"></i>
+                                                                    {% else %}
+                                                                    <i class="far fa-heart"></i>
+                                                                    {% endif %}
+                                                                    <input type="hidden" name="url_from" value="{{ request.get_full_path }}">
+                                                                </button>
+                                                                </form>
+                                                                {% else %}
+                                                                    <a class="save-job" href="#quick-view-modal-container" data-toggle="modal">
+                                                                    <i class="far fa-heart"></i>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="title-name">
+                                                                <h3 class="job-title">
+                                                                    <a href="{% url 'job_detail' pk=i_job.id %}">{{ i_job.title }}</a>
+                                                                </h3>
+                                                                <div class="employer-name">
+                                                                    <a href="{% url 'employer_detail' pk=i_job.company.id %}">{{ f_job.company }}</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="job-salary">{{ i_job.display_salary }}</span>
+                                                        <div class="job-meta">
+                                                            <div class="job-location"><i class="lnr lnr-map-marker"></i><a href="{% url 'jobs' %}?city={{ i_job.city.id }}">{{ i_job.city }}</a></div>
+
+                                                            <div class="job-type"><i class="lnr lnr-briefcase"></i><a class="def-color" href="{% url 'jobs' %}?type_of_employment={{ i_job.type_of_employment }}">{{ i_job.get_type_of_employment_display }}</a></div>
+
+                                                            <div class="job-date"><i class="lnr lnr-clock"></i>{{ i_job.published|naturaltime }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                {% endfor%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="all-link-button text-center mt-15">
+                            <a class="ht-btn lg-btn" href="{% url 'jobs' %}">Все вакансии</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Job Section End -->
+
+        <!-- Funfact Section Start  -->
+        <div class="funfact-section section mt--60 pb-50 pb-sm-0 pb-xs-0">
+            <div class="container">
+                <div class="row no-gutters align-items-center justify-content-center">
+
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!-- Single Funfact Start -->
+                        <div class="single-funfact">
+                            <div class="icon-img">
+                                <img src="{% static 'assets/images/icons/total-jobs.png' %}" alt="">
+                            </div>
+                            <div class="funfact-content">
+                                <span class="counter">{{ jobs_total }}</span>
+                                <span class="text theme-color">Вакансий</span>
+                            </div>
+                        </div>
+                        <!-- Single Funfact End -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!-- Single Funfact Start -->
+                        <div class="single-funfact">
+                            <div class="icon-img">
+                                <img src="{% static 'assets/images/icons/employers.png' %}" alt="">
+                            </div>
+                            <div class="funfact-content">
+                                <span class="counter">{{ employers_total }}</span>
+                                <span class="text theme-color">Работодателей</span>
+                            </div>
+                        </div>
+                        <!-- Single Funfact End -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <!-- Single Funfact Start -->
+                        <div class="single-funfact">
+                            <div class="icon-img">
+                                <img src="{% static 'assets/images/icons/job-applications.png' %}" alt="">
+                            </div>
+                            <div class="funfact-content">
+                                <span class="counter">{{ cities }}</span>
+                                <span class="text theme-color">Городов</span>
+                            </div>
+                        </div>
+                        <!-- Single Funfact End -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Funfact Section Start  -->
+
+{% endblock %}

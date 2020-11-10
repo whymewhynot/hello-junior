@@ -1,0 +1,474 @@
+<!doctype html>
+<html class="no-js" lang="ru">
+{% load static %}
+{% load humanize %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}IT-вакансии без опыта работы | Hello Junior{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico in the root directory -->
+    <link href="{% static 'assets/images/favicon.ico' %}" type="img/x-icon" rel="shortcut icon">
+    <!-- All css files are included here. -->
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/iconfont.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/vendor/helper.css' %}">
+    <!-- <link rel="stylesheet" href="assets/css/plugins/plugins.css"> -->
+    <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
+
+    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/plugins.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.min.css' %}">
+    <!-- Modernizr JS -->
+    <script src="{% static 'assets/js/vendor/modernizr-3.10.0.min.js' %}"></script>
+</head>
+
+<body class="template-color-1">
+
+    <div id="main-wrapper">
+
+
+
+
+
+
+
+
+        <!--Header section start-->
+        {% if request.path == '/' %}
+        <header class="header-absolute sb-border header-sticky d-none d-lg-block">
+        {% else %}
+        <header class="black-logo-version header-sticky sticky-white d-none d-lg-block">
+        {% endif %}
+            <div class="main-header">
+                <div class="container-fluid pl-50 pl-lg-15 pl-md-15 pr-0">
+                    <div class="row align-items-center no-gutters">
+
+                        <!--Logo start-->
+                        <div class="col-xl-2 col-lg-2 col-12">
+                            <div class="logo">
+                                {% if request.path == '/' %}
+                                <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo-white.png' %}" alt=""></a>
+                                {% else %}
+                                <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo.png' %}" alt="Hello Junior"></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!--Logo end-->
+
+                        <!--Menu start-->
+                        <div class="col-xl-7 col-lg-7 col-12">
+                            <nav class="main-menu">
+                                <ul>
+                                    <li><a href="{% url 'index' %}">Главная </a>
+                                    </li>
+                                    <li><a href="{% url 'jobs' %}">Вакансии </a>
+                                    </li>
+                                    <li><a href="{% url 'employers' %}">Работодатели </a>
+                                    </li>
+                                    {% if user.is_authenticated %}
+                                    <li><a href="{% url 'jobs' %}{% if user_params_link %}?page=1{{ user_params_link }}{% endif %}">Персональная лента <small class="icon-arrow"></small></a>
+                                        <ul class="sub-menu">
+                                            <li>Вакансии по критериям из вашего профиля</li>
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                        <!--Menu end-->
+
+                        <!-- Cart & Search Area Start -->
+                        <div class="col-xl-3 col-lg-3 col-12">
+                            <div class="header-btn-action d-flex justify-content-end">
+                                <div class="btn-action-wrap d-flex">
+                                    {% if '/pwd-reset' not in request.path %}
+                                    {% if user.is_authenticated %}
+                                    <div class="jp-author item">
+                                        <a href="{% url 'favorites' %}">
+                                            <span>Избранное</span>
+                                        </a>
+                                    </div>
+                                    <div class="jp-author-action item">
+                                        <ul>
+                                        <li><a href="{% url 'profile' %}"> <span>Мой профиль</span></a></li>
+                                        <li><a href="{% url 'logout' %}"><span class="fw-400">Выход</span></a></li>
+                                            </ul>
+                                    </div>
+                                    {% else %}
+                                    <div class="jp-author item">
+                                        <a href="#quick-view-modal-container" data-toggle="modal">
+                                            <i class="lnr lnr-user"></i>
+                                            <span>Войти</span>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart & Search Area End -->
+                    </div>
+
+                </div>
+            </div>
+        </header>
+        <!--Header section end-->
+
+        <!--Header Mobile section start-->
+        <header class="header-mobile bg_color--2 d-block d-lg-none">
+            <div class="header-bottom menu-right">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="header-mobile-navigation d-block d-lg-none">
+                                <div class="row align-items-center">
+                                    <div class="col-3 col-md-3">
+                                        <div class="mobile-navigation text-right">
+                                            <div class="header-icon-wrapper">
+                                                <ul class="icon-list justify-content-start">
+                                                    <li class="popup-mobile-click">
+                                                        <a href="javascript:void(0)"><i class="lnr lnr-menu"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-6">
+                                        <div class="header-logo text-center">
+                                            <a href="{% url 'index' %}">
+                                                <img src="{% static 'assets/images/logo-mobile.png' %}" class="img-fluid" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+        <!--Header Mobile section end-->
+
+        <!-- Start Popup Menu -->
+        <div class="popup-mobile-manu popup-mobile-visiable">
+            <div class="inner">
+                <div class="mobileheader">
+                    <div class="logo">
+                        <a href="{% url 'index' %}">
+                            <img src="{% static 'assets/images/logo-mobile.png' %}" alt="Multipurpose">
+                        </a>
+                    </div>
+                    <a class="mobile-close" href="job-listing.html#"></a>
+                </div>
+                <div class="menu-content">
+                    <ul class="menulist object-custom-menu">
+                        <li><a href="{% url 'index' %}"><span>Главная</span></a>
+                        </li>
+
+                        <li><a href="{% url 'jobs' %}"><span>Вакансии</span></a>
+                        </li>
+
+                        <li><a href="{% url 'employers' %}"><span>Работодатели</span></a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'jobs' %}{% if paginate_link %}?page=1{{ paginate_link }}{% endif %}"><span>Персональная лента</span></a>
+                        </li>
+                        <li><a href="{% url 'logout' %}"><span>Выйти из профиля</span></a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Popup Menu -->
+
+        <!-- Bottom Navbar Mobile Start -->
+        <div class="bottom-navbar-mobile section d-block d-lg-none">
+            <nav>
+                <ul class="list-actions">
+                    <li>
+                        <a class="toggle-btn {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">
+                            <span><i class="lnr lnr-home"></i></span>
+                            <span class="text">Главная</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="toggle-btn {% if '/jobs' in request.path %}active{% endif %}" href="{% url 'jobs' %}">
+                            <span><i class="lnr lnr-list"></i></span>
+                            <span class="text">Вакансии</span>
+                        </a>
+                    </li>
+
+                        {% if user.is_authenticated %}
+                    <li>
+                        <a class="toggle-btn {% if '/favorites' in request.path %}active{% endif %}" href="{% url 'favorites' %}">
+                            <span><i class="lnr lnr-heart"></i></span>
+                            <span class="text">Избранное</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="toggle-btn {% if '/accounts/profile' in request.path %}active{% endif %}" href="{% url 'profile' %}">
+                            <span><i class="lnr lnr-user"></i></span>
+                            <span class="text">Аккаунт</span>
+                        </a>
+                    </li>
+                        {% else %}
+                    <li>
+                        <a class="toggle-btn {% if '/accounts/login' in request.path %}active{% endif %}" href="{% url 'login' %}">
+                            <span><i class="lnr lnr-user"></i></span>
+                            <span class="text">Вход/Регистрация</span>
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Bottom Navbar Mobile End -->
+
+        <!-- Django messages -->
+        {% for message in messages %}
+        <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}success{% endif %}
+        alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        {% endfor %}
+
+        {% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Главаная</a></li>
+                                <li>Вакансии</li>
+                            </ul>
+                            <h1>Вакансии</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section End -->
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+        <!--Footer section start-->
+        <footer class="footer-section section st-border">
+
+            <!-- Footer Top Section Start -->
+            <div class="footer-top-section section pt-115 pt-lg-95 pt-md-75 pt-sm-55 pt-xs-45 pb-90 pb-lg-70 pb-md-40 pb-sm-20 pb-xs-15">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-xl-4 col-lg-3 col-md-6">
+                            <!-- Footer Widget Start -->
+                            <div class="footer-widget mb-30">
+                                <h6 class="title">О сайте</h6>
+                                <div class="address">
+                                    <span>Hello Junior - учебный проект для изучения фреймворка Django.</span>
+                                </div>
+                                <div class="footer-widget-image d-flex mt-35">
+                                    <a class="mr-5" href="job-listing.html#"><img src="{% static 'assets/images/app-store/github.png' %}" alt=""></a>
+
+                                </div>
+                            </div>
+                            <!-- Footer Widget End -->
+                        </div>
+
+                        <div class="col-xl-2 col-lg-2 col-md-6">
+                            <!-- Footer Widget Start -->
+                            <div class="footer-widget mb-30">
+                                <h6 class="title">Полезные ссылки</h6>
+                                <div class="footer-widget-link">
+                                    <ul>
+                                        <li><a href="https://docs.djangoproject.com/en/3.1/" target="_blank">Django docs</a></li>
+                                        <li><a href="https://github.com/hhru/api" target="_blank">HeadHunter API</a></li>
+                                        <li><a href="https://mailchimp.com/developer/api/marketing/" target="_blank">MailChimp API</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Footer Widget End -->
+                        </div>
+
+                        <div class="col-xl-2 col-lg-3 col-md-6">
+
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <!-- Footer Widget Start -->
+                            <div class="footer-widget mb-30">
+                                <h6 class="title">Информация</h6>
+                                <div class="newsletter">
+                                    <p>Администрация сайта не имеет отношения к опубликованным вакансиям.</p>
+                                    <p>Все данные предоставлены <a href="https://hh.ru" target="_blank">HeadHunter.ru</a></p>
+                                </div>
+                            </div>
+                            <!-- Footer Widget End -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Top Section End -->
+
+            <!--Footer bottom start-->
+            <div class="footer-bottom section fb-60">
+                <div class="container">
+                    <div class="row no-gutters st-border pt-35 pb-35 align-items-center justify-content-between">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="copyright">
+                                <p>2020 Hello Junior</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Footer bottom end-->
+
+        </footer>
+        <!--Footer section end-->
+
+        <!-- Modal Area Strat -->
+        <div class="modal fade quick-view-modal-container" id="quick-view-modal-container" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="row no-gutters">
+
+                                <div class="col-lg-4">
+                                    <div class="login-register-form-area">
+                                        <div class="login-tab-menu">
+                                            <ul class="nav">
+                                                <li><a class="active show" data-toggle="tab" href="#login">Вход</a></li>
+                                                <li><a data-toggle="tab" href="#register">Регистрация</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div id="login" class="tab-pane fade show active">
+                                                <div class="login-register-form">
+                                                    <form action="{% url 'login' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <p>Введите email и пароль, чтобы войти на сайт</p>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                {{ login_form.non_field_errors }}
+                                                                <div class="single-input">
+                                                                    {{ login_form.email }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <div class="single-input">
+                                                                    {{ login_form.password }}
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+
+<!--                                                            <div class="col-12">-->
+<!--                                                                <div class="checkbox-input">-->
+<!--                                                                    <input type="checkbox" name="login-form-remember" id="login-form-remember">-->
+<!--                                                                    <label for="login-form-remember">Remember me</label>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+                                                            <div class="col-12 mb-25"><button class="ht-btn">Войти</button></div>
+                                                            <div class="col-12">
+                                                                <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div id="register" class="tab-pane fade">
+                                                <div class="login-register-form">
+                                                    <form action="{% url 'register' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <p>Введите email и придумайте пароль, чтобы создать аккаунт</p>
+                                                        <div class="row row-5">
+                                                            <div class="col-12">
+                                                                {{ register_form.non_field_errors }}
+                                                                <div class="single-input">
+                                                                    {{ register_form.email }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="single-input">
+                                                                    {{ register_form.password }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="single-input">
+                                                                    {{ register_form.password2 }}
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                                                            <div class="checkbox-input">
+                                                            {{ register_form.is_subscribed }}
+                                                            <label for="{{ register_form.is_subscribed.id_for_label }}">Подписаться на рассылку</label>
+                                                            </div>
+                                                            <div class="col-12 mb-25"><button class="ht-btn">Создать аккаунт</button></div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="login-instruction">
+                                        <div class="login-instruction-content">
+                                            <h3 class="title">Зачем нужна регистрация</h3>
+                                            <p>Авторизация на сайте даёт возможность:</p>
+                                            <ul class="list-reasons">
+                                                <li class="reason">Сохранить параметры поиска для персональной ленты</li>
+                                                <li class="reason">Подписаться на email-рассылку новых вакансий по сохранённым параметрам</li>
+                                                <li class="reason">Добавлять вакансии в избранное</li>
+                                                <li class="reason">Перейти на сайт-источник вакансии</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Modal Area End -->
+
+
+        <!-- Placed js at the end of the document so the pages load faster -->
+
+
+    </div>
+
+    <!-- Placed js at the end of the document so the pages load faster -->
+
+    <!-- All jquery file included here -->
+    <script src="{% static 'assets/js/vendor/jquery-3.5.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/jquery-migrate-3.1.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <!-- <script src="assets/js/plugins/plugins.js"></script> -->
+
+    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+    <script src="{% static 'assets/js/plugins/plugins.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

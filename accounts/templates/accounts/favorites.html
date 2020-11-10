@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Избранное | Hello Junior{% endblock %}
+
+        {% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Главная</a></li>
+                                <li>Избранное</li>
+                            </ul>
+                            <h1>Избранное</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section End -->
+        {% endblock %}
+
+{% block content %}
+        <!-- Dashboard Content Section Start -->
+        <div class="dashboard-content-section section bg_color--5">
+            <div class="container-fluid p-0">
+                <div class="row no-gutters">
+                    <div class="col-xl-2 col-lg-3">
+                    </div>
+                    <div class="col-xl-8 col-lg-9">
+
+                        <div class="dashboard-main-inner">
+
+                            <div class="dashboard-overview">
+                                <div class="row">
+                                    <div class="col-xl-12 col-12">
+                                        <div class="job-applications mb-50">
+
+                                            <div class="bookmark-main-block">
+                                                <div class="bookmark-table">
+                                                    <table class="table">
+                                                        <tbody>
+                                                        {% for job in jobs %}
+                                                            <tr class="bookmark-item">
+                                                                <td class="bookmark-job">
+                                                                    <!-- Single Job Start  -->
+                                                                    <div class="single-job style-two border-0 p-0 bg-transparent">
+                                                                        <div class="info-top">
+                                                                            <div class="job-image ml-0 mr-10 mr-xs-0">
+                                                                                <a href="{% url 'job_detail' pk=job.id %}">
+                                                                                    {% if job.company.logo %}
+                                                                                    <img src="{{ job.company.logo }}" alt="{{ job.company }}">
+                                                                                    {% else %}
+                                                                                    <img src="{% static 'assets/images/companies_logo/no-logo.jpg' %}" alt="Нет логотипа">
+                                                                                    {% endif %}
+                                                                                </a>
+                                                                            </div>
+                                                                            <div class="job-info">
+                                                                                <div class="job-info-inner">
+                                                                                    <div class="job-info-top">
+                                                                                        <div class="title-name">
+                                                                                            <h5 class="job-title">
+                                                                                                <a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a>
+                                                                                            </h5>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="job-meta-two flex-wrap">
+                                                                                        <div class="field-salary_from">
+                                                                                            <i class="gj-icon gj-icon-money"></i>
+                                                                                            {{ job.display_salary }}
+                                                                                        </div>
+                                                                                        <div class="field-datetime"><i class="lnr lnr-clock"></i>{{ job.published|naturaltime }}</div>
+                                                                                        <div class="field-map"><i class="lnr lnr-map-marker"></i>{{ job.city }}</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Single Job End -->
+                                                                </td>
+                                                                <td class="delete-bookmark text-xl-right">
+                                                                    <form action="{% url 'add_remove' id=job.id %}" method="post">{% csrf_token %}
+                                                                    <button class="save-job" type="submit"> <i class="lnr lnr-trash"></i></button>
+                                                                    <input type="hidden" name="url_from" value="{{ request.path }}">
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        {% empty %}
+                                                        <p>Ваш список пуст</p>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dashboard Content Section End -->
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Вход и регистрация | Hello Junior{% endblock %}
+{% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="{% url 'index' %}">Home</a></li>
+                                <li>Вход и регистрация</li>
+                            </ul>
+                            <h1>Вход и регистрация</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section Start -->
+{% endblock %}
+
+{% block content %}
+        <!-- Login Register Section Start -->
+        <div class="login-register-section section bg_color--5 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row no-gutters">
+
+                    <div class="col-lg-4">
+                        <div class="login-register-form-area">
+                            <div class="login-tab-menu">
+                                <ul class="nav">
+                                    <li><a {% if '/login' in request.path %}class="active show"{% endif %}
+                                        data-toggle="tab" href="#login">Вход</a></li>
+                                    <li><a {% if '/register' in request.path %}class="active show"{% endif %}
+                                        data-toggle="tab" href="#register">Регистрация</a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div id="login" class="tab-pane fade {% if '/login' in request.path %}show active{% endif %}">
+                                    <div class="login-register-form">
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <p>Введите email и пароль, чтобы войти на сайт</p>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    {{ login_form.non_field_errors }}
+                                                    <div class="single-input">
+                                                        {{ login_form.email }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="single-input">
+                                                        {{ login_form.password }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mb-25"><button class="ht-btn">Войти</button></div>
+                                                <div class="col-12">
+                                                    <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div id="register" class="tab-pane fade {% if '/register' in request.path %}show active{% endif %}">
+                                    <div class="login-register-form">
+                                        <form action="" method="post">
+                                            {% csrf_token %}
+                                            <p>Введите email и придумайте пароль, чтобы создать аккаунт</p>
+                                            <div class="row row-5">
+                                                <div class="col-12">
+                                                    {{ register_form.non_field_errors }}
+                                                    <div class="single-input">
+                                                        {{ register_form.email }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="single-input">
+                                                        {{ register_form.password }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="single-input">
+                                                        {{ register_form.password2 }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-12" >
+                                                    <div class="checkbox-input">
+                                                        {{ register_form.is_subscribed }}
+                                                        <label for="{{ register_form.is_subscribed.id_for_label }}">Подписаться на рассылку</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mb-25"><button class="ht-btn">Создать аккаунт</button></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="login-instruction">
+                            <div class="login-instruction-content">
+                                <h3 class="title">Зачем нужна регистрация</h3>
+                                <p>Авторизация на сайте даёт возможность:</p>
+                                <ul class="list-reasons">
+                                    <li class="reason">Сохранить параметры поиска для персональной ленты</li>
+                                    <li class="reason">Подписаться на email-рассылку новых вакансий по сохранённым параметрам</li>
+                                    <li class="reason">Добавлять вакансии в избранное</li>
+                                    <li class="reason">Перейти на сайт-источник вакансии</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Login Register Section End -->
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Поиск вакансий в IT без опыта работы | Hello Junior{% endblock %}
+{% block breadcrumb %}
+        <!-- Breadcrumb Section Start -->
+        <div class="breadcrumb-section section bg_color--5 pt-60 pt-sm-50 pt-xs-40 pb-60 pb-sm-50 pb-xs-40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-breadcrumb-content">
+                            <ul class="page-breadcrumb">
+                                <li><a href="index.html">Главная</a></li>
+                                <li>Вакансии</li>
+                            </ul>
+                            <h1>Список вакансий</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb Section Start -->
+{% endblock %}
+
+{% block content %}
+        <!-- Job Listing Section Start -->
+        <div class="job-listing-section section bg_color--5 pb-120 pb-lg-100 pb-md-80 pb-sm-60 pb-xs-50">
+            <div class="container">
+                <div class="row no-gutters">
+                    <div class="col-lg-4 order-lg-1 order-2 pr-55 pr-md-15 pr-sm-15 pr-xs-15">
+                    <form action="">
+                        <div class="sidebar-wrapper-two mt-sm-40 mt-xs-40">
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Подбор вакансий</h2>
+                                <div class="sidebar-search-form-two">
+                                        <div class="input-group">
+                                            {{ form.title }}
+                                            <i class="lnr lnr-magnifier"></i>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Зарплата</h2>
+                                        <div class="filter-name-item">
+                                            {{ form.salary_from }}
+                                        </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Тип занятости</h2>
+                                <div class="filter-name-item">
+                                    {{ form.type_of_employment }}
+                                </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Город</h2>
+                                        <div class="single-field-item">
+                                            {{ form.city }}
+                                        </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                        <div class="filter-name-item">
+                                            <label for={{ form.remote.id_for_label }}>{{ form.remote }} Можно удалённо</label>
+                                        </div>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                <h2 class="sidebar-title">Стек</h2>
+                                <ul class="sidebar-tag">
+                                    {% for skill in form.skills %}
+                                    <li><a>{{ skill }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="common-sidebar-widget sidebar-two">
+                                        <div class="filter-name-item">
+                                            <button class="ht-btn theme-btn theme-btn-two w-100">Найти</button>
+                                        </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+
+                    <div class="col-lg-8 order-lg-2 order-1">
+                        <div class="filter-form">
+                            <div class="result-sorting">
+                                <div class="total-result">
+                                    Найдено вакансий:
+                                    <span class="total">{{ jobs.paginator.count }}</span>
+                                </div>
+
+                                <div class="form-left">
+                                    <div class="layout-switcher">
+                                        <ul class="nav">
+                                            <li><a class="active show" data-toggle="tab" href="#list"><i class="fa fa-list"></i></a></li>
+                                            <li><a data-toggle="tab" href="#grid"><i class="fa fa-th"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="list" class="tab-pane fade show active">
+                                <div class="row">
+                                    {% for job in jobs %}
+                                    <div class="col-lg-12 mb-20">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-job style-two">
+                                            <div class="info-top">
+                                                <div class="job-image">
+                                                    <a href="{% url 'job_detail' pk=job.id %}">
+                                                        {% if job.company.logo %}
+                                                        <img src="{{ job.company.logo }}" alt="{{ job.company.name }}">
+                                                        {% else %}
+                                                        <img src="{% static 'assets/images/companies_logo/no-logo.jpg' %}" alt="Нет логотипа">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="job-info">
+                                                    <div class="job-info-inner">
+                                                        <div class="job-info-top">
+                                                            <div class="saveJob for-listing">
+                                                                {% if job.remote %}
+                                                                <span class="featured-label">Удалённо</span>
+                                                                {% endif %}
+                                                                <a class="job-type-label ml-20 mr-20" href="{% url 'jobs' %}?type_of_employment={{ job.type_of_employment }}">{{ job.get_type_of_employment_display }}</a>
+                                                                {% if user.is_authenticated %}
+                                                                <form action="{% url 'add_remove' id=job.id %}" method="post">{% csrf_token %}
+                                                                <button class="save-job" type="submit">
+                                                                    {% if job in user.favorites.all %}
+                                                                    <i class="fas fa-heart" style="color:red"></i>
+                                                                    {% else %}
+                                                                    <i class="far fa-heart"></i>
+                                                                    {% endif %}
+                                                                <input type="hidden" name="url_from" value="{{ request.get_full_path }}">
+                                                                </button>
+                                                                </form>
+                                                                {% else %}
+                                                                <a class="save-job" href="#quick-view-modal-container" data-toggle="modal">
+                                                                    <i class="far fa-heart"></i>
+                                                                </a>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="title-name">
+                                                                <h3 class="job-title">
+                                                                    <a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a>
+                                                                </h3>
+                                                                <div class="employer-name">
+                                                                    <a href="{% url 'employer_detail' pk=job.company.id %}">{{ job.company }}</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="job-meta-two">
+                                                            <div class="field-salary_from">
+                                                                {% if job.salary_from and job.salary_up_to %}
+                                                                {{ job.salary_from|intcomma }}-{{ job.salary_up_to|intcomma }} {{job.get_salary_currency_display }}
+                                                                {% elif job.salary_from %}
+                                                                от {{ job.salary_from|intcomma }} {{job.get_salary_currency_display }}
+                                                                {% elif job.salary_up_to %}
+                                                                до {{ job.salary_up_to|intcomma }} {{job.get_salary_currency_display }}
+                                                                {% else %}
+                                                                З/п не указана
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="field-datetime"><i class="lnr lnr-clock"></i>{{ job.published|naturaltime }}</div>
+                                                            <div class="field-map"><i class="lnr lnr-map-marker"></i>{{ job.city }}</div>
+                                                        </div>
+                                                        {% if job.skills %}
+                                                        <div class="job-skill-tag">
+                                                            {% for skill in job.skills.all %}
+                                                            <a href="{% url 'jobs' %}?skills={{ skill.id }}">{{ skill.name }}</a>
+                                                            {% endfor %}
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                    {% empty %}
+                                    <div class="col-lg-12 mb-20">
+                                        <p>По вашим параметрам ничего не найдено</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if jobs.has_other_pages %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <ul class="page-pagination">
+                                            {% if jobs.has_previous %}
+                                            <li><a href="?page={{ jobs.previous_page_number }}{{ paginate_link }}">
+                                            <i class="fa fa-angle-left"></i></a></li>
+                                            {% if jobs.number > 3 %}
+                                            <li><a href="?page=1{{ paginate_link }}">1</a>
+                                            </li>
+                                            {% if jobs.number > 4 %}
+                                            <li>...</li>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% endif %}
+
+                                            {% for num in jobs.paginator.page_range %}
+                                            {% if jobs.number == num %}
+                                            <li class="active"><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a></li>
+                                            {% elif num > jobs.number|add:'-3' and num < jobs.number|add:'3' %}
+                                            <li><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                            {% if jobs.has_next %}
+                                            {% if jobs.number < jobs.paginator.num_pages|add:'-3' %}
+                                            <li>...</li>
+                                            <li><a href="?page={{ jobs.paginator.num_pages }}{{ paginate_link }}">{{ jobs.paginator.num_pages }}</a>
+                                            </li>
+                                            {% elif jobs.number < jobs.paginator.num_pages|add:'-2' %}
+                                            <li><a href="?page={{ jobs.paginator.num_pages }}{{ paginate_link }}">{{ jobs.paginator.num_pages }}</a>
+                                            </li>
+                                            {% endif %}
+                                            <li><a href="?page={{ jobs.next_page_number }}{{ paginate_link }}"><i class="fa fa-angle-right"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div id="grid" class="tab-pane fade">
+                                <div class="row">
+                                    {% for job in jobs %}
+                                    <div class="col-md-6 mb-20">
+                                        <!-- Single Job Start  -->
+                                        <div class="single-job-grid-two">
+                                            <div class="saveJob-grid">
+                                                <a class="job-type-label remote" href="job-listing.html#">{{ job.get_type_of_employment_display }}</a>
+                                                {% if user.is_authenticated %}
+                                                <form action="{% url 'add_remove' id=job.id %}" method="post">{% csrf_token %}
+                                                <button class="save-job" type="submit">
+                                                     <input type="hidden" name="url_from" value="{{ request.get_full_path }}">
+                                                    {% if job in user.favorites.all %}
+                                                    <i class="fas fa-heart" style="color:red"></i>Сохранить
+                                                    {% else %}
+                                                    <i class="far fa-heart"></i>Сохранить
+                                                    {% endif %}
+                                                </button>
+                                                </form>
+                                                {% else %}
+                                                <a class="save-job" href="#quick-view-modal-container" data-toggle="modal">
+                                                    <i class="far fa-heart"></i>Сохранить
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="job-info">
+                                                <div class="job-info-top">
+                                                    <div class="title-name">
+                                                        <h3 class="job-title">
+                                                            <a href="{% url 'job_detail' pk=job.id %}">{{ job.title }}</a>
+                                                        </h3>
+                                                        <div class="employer-name">
+                                                            <a href="{% url 'employer_detail' pk=job.company.id %}">{{ job.company }}</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="job-meta-two">
+                                                    <div class="field-salary_from">
+                                                        <i class="gj-icon gj-icon-money"></i>
+                                                        {% if job.salary_from and job.salary_up_to %}
+                                                        {{ job.salary_from|intcomma }}-{{ job.salary_up_to|intcomma }} {{job.get_salary_currency_display }}
+                                                        {% elif job.salary_from %}
+                                                        от {{ job.salary_from|intcomma }} {{job.get_salary_currency_display }}
+                                                        {% elif job.salary_up_to %}
+                                                        до {{ job.salary_up_to|intcomma }} {{job.get_salary_currency_display }}
+                                                        {% else %}
+                                                        З/п не указана
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="field-datetime"><i class="lnr lnr-clock"></i>{{ job.published|naturaltime }}</div>
+                                                    <div class="field-map"><i class="lnr lnr-map-marker"></i>{{ job.city }}</div>
+                                                </div>
+                                                <div class="field-descriptions">
+                                                    <p>{{ job.short_description|striptags }}</p>
+                                                </div>
+                                                {% if job.display_skills %}
+                                                <div class="job-skill-tag">
+                                                    {% for skill in job.skills.all|slice:":5" %}
+                                                    <a href="{% url 'jobs' %}?skills={{ skill.id }}">{{ skill.name }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- Single Job End -->
+                                    </div>
+                                    {% empty %}
+                                    <div class="col-lg-12 mb-20">
+                                        <p>По вашим параметрам ничего не найдено</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% if jobs.has_other_pages %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <ul class="page-pagination">
+                                            {% if jobs.has_previous %}
+                                            <li><a href="?page={{ jobs.previous_page_number }}{{ paginate_link }}">
+                                            <i class="fa fa-angle-left"></i></a></li>
+                                            {% if jobs.number > 3 %}
+                                            <li><a href="?page=1{{ paginate_link }}{{ paginate_link }}">1</a>
+                                            </li>
+                                            {% if jobs.number > 4 %}
+                                            <li>...</li>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% endif %}
+
+                                            {% for num in jobs.paginator.page_range %}
+                                            {% if jobs.number == num %}
+                                            <li class="active"><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a></li>
+                                            {% elif num > jobs.number|add:'-3' and num < jobs.number|add:'3' %}
+                                            <li><a href="?page={{ num }}{{ paginate_link }}">{{ num }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                            {% if jobs.has_next %}
+                                            {% if jobs.number < jobs.paginator.num_pages|add:'-3' %}
+                                            <li>...</li>
+                                            <li><a href="?page={{ jobs.paginator.num_pages }}{{ paginate_link }}">{{ jobs.paginator.num_pages }}</a>
+                                            </li>
+                                            {% elif jobs.number < jobs.paginator.num_pages|add:'-2' %}
+                                            <li><a href="?page={{ jobs.paginator.num_pages }}{{ paginate_link }}">{{ jobs.paginator.num_pages }}</a>
+                                            </li>
+                                            {% endif %}
+                                            <li><a href="?page={{ jobs.next_page_number }}{{ paginate_link }}"><i class="fa fa-angle-right"></i></a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Job Listing Section End -->
+{% endblock %}
