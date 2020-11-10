@@ -76,7 +76,7 @@ class Employer(models.Model):
     logo = models.URLField(max_length=500, null=True, verbose_name='Логотип', blank=True)
     description = models.TextField(null=True, verbose_name='Описание', blank=True)
     website = models.URLField(null=True, verbose_name='Сайт', blank=True)
-    vacancies = models.ManyToManyField(Job, null=True, blank=True, verbose_name='Вакансии')
+    vacancies = models.ManyToManyField('Job', null=True, blank=True, verbose_name='Вакансии')
 
     page_views = models.IntegerField(default=0)
 
