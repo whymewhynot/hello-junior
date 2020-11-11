@@ -36,7 +36,7 @@ def create_email_template(jobs_data):
 
     jobs_html_list = []
     for job in jobs_data:
-        job_str = f'<li><a href="http://127.0.0.1:8000/job/{job["id"]}" target="_blank">{job["title"]}</a></li>'
+        job_str = f'<li><a href="https://hello-junior.herokuapp.com/job/{job["id"]}" target="_blank">{job["title"]}</a></li>'
         jobs_html_list.append(job_str)
 
     jobs_html_list = '\n'.join(jobs_html_list)
@@ -82,7 +82,7 @@ def send_newsletter(emails, email_template):
                                                    "list_id": list_id
                                                },
                                                "settings": {"subject_line": template_subject,
-                                                            "reply_to": "outcry69@mail.ru",
+                                                            "reply_to": "hello-junior@yandex.ru",
                                                             "from_name": "Hello Junior", "template_id": template_id}
                                                })
         campaign_id = response['id']
