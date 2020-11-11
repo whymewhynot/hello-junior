@@ -1,6 +1,5 @@
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
-import hashlib
 import os
 from datetime import datetime, timedelta
 
@@ -52,7 +51,7 @@ def send_newsletter(emails, email_template):
 
     template_html = email_template
 
-    from_date = (datetime.now() - timedelta(days=3)).strftime('%d.%m.%Y')
+    from_date = (datetime.now() - timedelta(days=1)).strftime('%d.%m.%Y')
     to_date = datetime.now().strftime('%d.%m')
     template_subject = f"Новые вакансии {from_date}-{to_date}"
 

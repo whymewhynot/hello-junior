@@ -8,33 +8,32 @@ employment_status={'Полная занятость' : 'f',
                     'Волонтерство' : 'v'}
 
 
-def get_job_ids_from_page(page_num=0, job_id_list = []):
-    print('page_num= ', page_num)
+def get_job_ids_from_page():
     url = 'https://api.hh.ru/vacancies'
     headers = {'User-Agent': 'HH-User-Agent'}
-    params = {
-        'area' : '113',
-        'specialization' : '1.221',
-        'experience' : 'noExperience',
-        'period' : '30',
-        'page' : page_num,
-        'per_page' : '100',
-        'order_by' : 'publication_time'
-                }
+    page_num = 0
+    job_id_list = []
 
-    r = requests.get(url, headers=headers, params=params)
-    r_data = r.content.decode('utf-8')
-    python_data = json.loads(r_data)
-    r.close()
-
-    while page_num <= 19:
+    for i in range(20): # HH response is limited by 2000 records and 20 pages
+        params = {
+            'area': '113',
+            'specialization': '1.221',
+            'experience': 'noExperience',
+            'period': '30',
+            'page': page_num,
+            'per_page': '100',
+            'order_by': 'publication_time'
+        }
+        print('page_num= ', page_num)
+        r = requests.get(url, headers=headers, params=params)
+        r_data = r.content.decode('utf-8')
+        python_data = json.loads(r_data)
         vacancies = python_data['items']
         job_id_list += [job['id'] for job in vacancies]
-        print(f'Получено {len(job_id_list)} id')
         page_num += 1
-        get_job_ids_from_page(page_num, job_id_list)
-    else:
-        return job_id_list
+        print(f'Получено {len(job_id_list)} id')
+    r.close()
+    return job_id_list
 
 def get_job_info(job_id):
     url = f'https://api.hh.ru/vacancies/{job_id}'
@@ -44,6 +43,8 @@ def get_job_info(job_id):
     r_data = r.content.decode('utf-8')
     python_data = json.loads(r_data)
     r.close()
+
+    job_info = dict()
 
     title = python_data['name']
     city = python_data['area']['name']
@@ -58,7 +59,11 @@ def get_job_info(job_id):
         currency = 'RUR'
 
     experience = python_data['experience']['name']
-    company = python_data['employer']['id']
+    try:
+        employer_id = python_data['employer']['id']
+    except:
+        job_info['company'] = python_data['employer']['name']
+        employer_id = None
 
     published = python_data['published_at']
 
@@ -72,39 +77,42 @@ def get_job_info(job_id):
     skills = [skill['name'] for skill in python_data['key_skills']]
     archived = python_data['archived']
 
-    job_info = {'title' : title, 'salary_from' : salary_from, 'salary_up_to' : salary_up_to,
+    job_info.update({'title' : title, 'salary_from' : salary_from, 'salary_up_to' : salary_up_to,
                 'salary_currency' : currency, 'experience' : experience, 'archived' : archived,
                 'published' : published, 'type_of_employment' : type_of_employment,
-                'remote' : remote, 'hh_id' : job_id, 'description' : description}
-    employer_id = company
+                'remote' : remote, 'hh_id' : job_id, 'description' : description})
+
 
     return job_info, skills, employer_id, city
 
 
 def get_employer_info(employer_id):
-    url = f'https://api.hh.ru/employers/{employer_id}'
-    headers = {'User-Agent': 'HH-User-Agent'}
+    if employer_id:
+        url = f'https://api.hh.ru/employers/{employer_id}'
+        headers = {'User-Agent': 'HH-User-Agent'}
 
-    r = requests.get(url, headers=headers)
-    r_data = r.content.decode('utf-8')
-    python_data = json.loads(r_data)
-    r.close()
+        r = requests.get(url, headers=headers)
+        r_data = r.content.decode('utf-8')
+        python_data = json.loads(r_data)
+        r.close()
 
-    name = python_data['name']
+        name = python_data['name']
 
-    try:
-        logo = python_data['logo_urls']['240']
-    except TypeError:
-        logo = None
+        try:
+            logo = python_data['logo_urls']['240']
+        except TypeError:
+            logo = None
 
-    description = python_data['description']
+        description = python_data['description']
 
-    try:
-        website = python_data['site_url']
-    except TypeError:
-        website = None
+        try:
+            website = python_data['site_url']
+        except TypeError:
+            website = None
 
-    defaults = {'logo' : logo, 'description' : description, 'website' : website}
+        defaults = {'logo' : logo, 'description' : description, 'website' : website}
 
-    # get_or_create data format:
-    return {'name' : name, 'defaults' : {'logo' : logo, 'description' : description, 'website' : website}}
+        # get_or_create data format:
+        return {'name' : name, 'defaults' : defaults}
+    else:
+        return None

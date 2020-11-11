@@ -15,7 +15,7 @@ from django.utils import timezone
 
 User = get_user_model()
 
-last_3_days = datetime.now(tz=timezone.utc) - timedelta(days=3)
+last_day = datetime.now(tz=timezone.utc) - timedelta(days=1)
 
 users_data = []
 jobs_data = []
@@ -28,8 +28,8 @@ if users:
                    'skills' : list(user.skills.values_list('name', flat=True))}
                   for user in users]
 
-#jobs = Job.objects.filter(published__gte=last_3_days)
-jobs = Job.objects.all()
+jobs = Job.objects.filter(published__gte=last_day)
+
 if jobs:
     jobs_data = [{'id' : job.id,
                   'city' : job.city.name,
