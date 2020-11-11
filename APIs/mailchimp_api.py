@@ -29,9 +29,8 @@ def subscribe_or_unsubscribe(email_list):
 
 
 def create_email_template(jobs_data):
-    email_template_path = os.path.abspath('email_template.html')
 
-    with open(email_template_path, mode='r', encoding='utf8') as f:
+    with open('email_template.html', mode='r', encoding='utf8') as f:
         email_template = f.read()
 
     jobs_html_list = []
