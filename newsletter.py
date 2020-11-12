@@ -95,7 +95,7 @@ if result:
                                 values('id', 'title')[:5]
             jobs_segment_data = list(jobs_segment_data)
             email_template = create_email_template(jobs_segment_data)
-            send_newsletter(emails=segment['emails'], email_template=email_template)
+            send_newsletter(emails=list(segment['emails']), email_template=email_template)
 
 
 
