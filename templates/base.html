@@ -22,9 +22,21 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.min.css' %}">
     <!-- Modernizr JS -->
     <script src="{% static 'assets/js/vendor/modernizr-3.10.0.min.js' %}"></script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PFDPHG8');</script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body class="template-color-1">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PFDPHG8"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <div id="main-wrapper">
 
@@ -36,23 +48,14 @@
 
 
         <!--Header section start-->
-        {% if request.path == '/' %}
-        <header class="header-absolute sb-border header-sticky d-none d-lg-block">
-        {% else %}
         <header class="black-logo-version header-sticky sticky-white d-none d-lg-block">
-        {% endif %}
             <div class="main-header">
                 <div class="container-fluid pl-50 pl-lg-15 pl-md-15 pr-0">
                     <div class="row align-items-center no-gutters">
-
                         <!--Logo start-->
                         <div class="col-xl-2 col-lg-2 col-12">
                             <div class="logo">
-                                {% if request.path == '/' %}
-                                <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo-white.png' %}" alt=""></a>
-                                {% else %}
                                 <a href="{% url 'index' %}"><img src="{% static 'assets/images/logo.png' %}" alt="Hello Junior"></a>
-                                {% endif %}
                             </div>
                         </div>
                         <!--Logo end-->
@@ -228,6 +231,7 @@
         </div>
         <!-- Bottom Navbar Mobile End -->
 
+
         <!-- Django messages -->
         {% for message in messages %}
         <div class="alert alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}success{% endif %}
@@ -238,6 +242,7 @@
         </button>
         </div>
         {% endfor %}
+
 
         {% block breadcrumb %}
         <!-- Breadcrumb Section Start -->

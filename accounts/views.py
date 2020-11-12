@@ -22,6 +22,9 @@ class LoginOrRegisterView(View):
                                 password=data.get('password'))
             login(request, user)
             messages.success(request, f'Успешная авторизация {user}')
+            # next_page = self.request.POST.get('next', 'index')
+            # if next_page == 'login' or next_page == 'register':
+            #     next_page = 'index'
             return redirect(self.request.POST.get('next', 'index'))
 
         if register_form.is_valid():
@@ -39,10 +42,13 @@ class LoginOrRegisterView(View):
                                               'register_form' : register_form})
 
     def get(self, request):
-        login_form = UserLoginForm(request.POST)
-        register_form = UserRegistrationForm(request.POST)
-        return render(request, 'accounts/login-register.html', {'login_form': login_form,
-                                              'register_form' : register_form})
+        if request.user.is_authenticated:
+            return redirect('profile')
+        else:
+            login_form = UserLoginForm(request.POST)
+            register_form = UserRegistrationForm(request.POST)
+            return render(request, 'accounts/login-register.html', {'login_form': login_form,
+                                                  'register_form' : register_form})
 
 
 

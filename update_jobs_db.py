@@ -45,6 +45,8 @@ def save_job(job_info, skills, employer_info, city):
 
 
 db_id_list = list(Job.objects.filter(archived=False).values_list('hh_id', flat=True))
+db_id_list = [str(id) for id in db_id_list]
+
 hh_id_list = get_job_ids_from_page()
 
 new_ids_list = list(set(hh_id_list) - set(db_id_list))
