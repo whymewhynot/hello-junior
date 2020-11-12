@@ -60,16 +60,16 @@ def send_newsletter(emails, email_template):
     # create new template:
     try:
         repsonse = mailchimp.templates.create({"name": template_name, "html": template_html})
-        template_id = repsonse['id']
     except ApiClientError as error:
         print(f"Error: {error.text}")
+    template_id = repsonse['id']
 
     # tag subscribers:
     try:
         repsonse = mailchimp.lists.create_segment(list_id, {"name": template_name, "static_segment": emails})
-        tag_id = repsonse['id']
     except ApiClientError as error:
         print(f"Error: {error.text}")
+    tag_id = repsonse['id']
 
     # create campaign:
     try:
@@ -87,9 +87,10 @@ def send_newsletter(emails, email_template):
                                                             "reply_to": "hello-junior@yandex.ru",
                                                             "from_name": "Hello Junior", "template_id": template_id}
                                                })
-        campaign_id = response['id']
+
     except ApiClientError as error:
         print("Error: {}".format(error.text))
+    campaign_id = response['id']
 
     # send campaign:
     try:
